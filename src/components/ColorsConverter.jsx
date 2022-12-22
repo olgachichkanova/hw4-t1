@@ -2,15 +2,15 @@ const { useState } = require("react")
 
 const ColorsConverter = () => {
     const hexToRGB = (hex) => {
-        if(hex.length < 3) {
-            return "error"
+        if(hex.length < 7) {
+            return
         }
         let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
         hex = hex.replace(shorthandRegex, function(m, r, g, b) {
           return r + r + g + g + b + b;
         });
         let [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
-        if ([r, g, b].some(i => typeof(i) !== 'number')) {
+        if ([r, g, b].some(i => typeof(i) !== 'number' || isNaN(i))) {
           return "error"
         }
         return `rgb(${r}, ${g}, ${b})`;
@@ -25,7 +25,7 @@ const ColorsConverter = () => {
     }
 
     return (
-        <div className="ColorsConverter" style={{backgroundColor: hexColor}}>
+        <div className="ColorsConverter" style={{backgroundColor: rgbColor === "error" ? "#ea4b34" : hexColor}}>
             <div>
                 <input type="text" value={hexColor} onChange={handleInput}></input>
                 <div className="message">{rgbColor}</div>
