@@ -2,19 +2,27 @@ const { useState } = require("react")
 
 const ColorsConverter = () => {
     const hexToRGB = (hex) => {
-        if(hex.length < 7) {
-            return
+        if (!hex || typeof hex !== 'string' || hex.length < 7) {
+          return;
         }
+      
         let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
         hex = hex.replace(shorthandRegex, function(m, r, g, b) {
           return r + r + g + g + b + b;
         });
-        let [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
-        if ([r, g, b].some(i => typeof(i) !== 'number' || isNaN(i))) {
-          return "error"
+      
+        let matches = hex.match(/\w\w/g);
+        if (matches) {
+          let [r, g, b] = matches.map(x => parseInt(x, 16));
+          if ([r, g, b].some(i => typeof(i) !== 'number' || isNaN(i))) {
+            return "error";
+          }
+          return `rgb(${r}, ${g}, ${b})`;
+        } else {
+          return "error";
         }
-        return `rgb(${r}, ${g}, ${b})`;
-    }
+      }
+      
 
     const [hexColor, setHexColor] = useState('#34495e')
     const [rgbColor, setRgbColor] = useState(hexToRGB(hexColor))
